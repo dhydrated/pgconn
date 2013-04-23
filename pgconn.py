@@ -3,9 +3,6 @@
 
 from optparse import OptionParser
 import os
-import glob
-import time
-import gzip
 import logging
 
 
