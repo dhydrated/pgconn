@@ -6,7 +6,6 @@ import os
 import glob
 import time
 import gzip
-import datetime
 import logging
 
 
