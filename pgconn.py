@@ -7,6 +7,7 @@ import glob
 import time
 import gzip
 import datetime
+import logging
 
 
 class ArgumentParser:
@@ -40,23 +41,19 @@ class ArgumentParser:
 	def printUsage(self):
 		self.parser.print_help()
 
-class Logger:
-	"""Script logger"""
+class LoggerFactory:
 
-	def __init__(self, arguments):
-		self.arguments = arguments
-		self.verbose = self.arguments.isVerbose()
+	@staticmethod
+	def createLogger(arguments):
+		if arguments.isVerbose():
+			logging.basicConfig(format='%(asctime)s %(name)s:%(lineno)s %(message)s', level=logging.DEBUG)
 
-	def debug(self, msg):
-		if self.verbose :
-			self._print_(msg)
+		return logging.getLogger(LoggerFactory.getScriptName())
 
-	def info(self, msg):
-		self._print_(msg)
-			
-	def _print_(self,msg):
-		print str(datetime.datetime.today())+" : "+str(msg)
-
+	@staticmethod
+	def getScriptName():
+		return os.path.basename(__file__)
+		
 		
 class PgInfo:
 	"""pg connection details"""
@@ -152,7 +149,7 @@ def main():
 	arguments = ArgumentParser()
 	arguments.parse()
 
-	logger = Logger(arguments)
+	logger = LoggerFactory.createLogger(arguments)
 
 	if arguments.isValid():
 		parser = PgPassParser(logger, arguments)
