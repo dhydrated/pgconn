@@ -90,12 +90,14 @@ class PgPassParser:
 		self.filePath = arguments.getPath()
 
 	def parse(self):
-		fileObject = file(self.filePath, 'r')																		
+		fileObject = file(self.filePath, 'r')															
+		index = 0		
 		for line in fileObject:
 			if self.isValidData(line):
 				pgInfo = PgInfo(self.logger, line)
 				pgInfo.parse()
-				self.databases.insert(0, pgInfo)
+				self.databases.insert(index, pgInfo)
+				index = index + 1
 
 	def isValidData(self,data):
 		if (data.replace('\n','') == ""):
