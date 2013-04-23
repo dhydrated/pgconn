@@ -92,9 +92,16 @@ class PgPassParser:
 	def parse(self):
 		fileObject = file(self.filePath, 'r')																		
 		for line in fileObject:
-			pgInfo = PgInfo(self.logger, line)
-			pgInfo.parse()
-			self.databases.insert(0, pgInfo)
+			if self.isValidData(line):
+				pgInfo = PgInfo(self.logger, line)
+				pgInfo.parse()
+				self.databases.insert(0, pgInfo)
+
+	def isValidData(self,data):
+		if (data.replace('\n','') == ""):
+			return False
+		else:
+			return True
 
 	def getDatabases(self):
 		return self.databases
@@ -115,6 +122,7 @@ class MenuBuilder:
 			self.menu += str(index) + ") " + item.getName() + "\n"
 			index+=1
 
+		self.menu += "q) Quit." + "\n"
 		self.menu += "Your selection: "
 		self.selection = raw_input(self.menu)
 
@@ -130,8 +138,9 @@ class ItemExecutor:
 		self.items = items
 
 	def execute(self):
-		self.logger.debug(self.getItem().getExecuteCommand())
-		os.system(self.getItem().getExecuteCommand())
+		if self.selection != "q":
+			self.logger.debug(self.getItem().getExecuteCommand())
+			os.system(self.getItem().getExecuteCommand())
 
 	def getItem(self):
 		return self.items[int(self.selection)-1]
