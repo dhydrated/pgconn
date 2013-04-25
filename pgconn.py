@@ -40,16 +40,17 @@ class ArgumentParser:
 class LoggerFactory:
 
 	@staticmethod
-	def createLogger(arguments):
-		if arguments.isVerbose():
-			logging.basicConfig(format='%(asctime)s %(name)s:%(lineno)s %(message)s', level=logging.DEBUG)
-
-		return logging.getLogger(LoggerFactory.getScriptName())
-
-	@staticmethod
-	def getScriptName():
-		return os.path.basename(__file__)
+	def createLogger(name, verbose):
+		logging.basicConfig(format='%(asctime)s %(name)s:%(lineno)s %(message)s', level=LoggerFactory._createLevel_(verbose))
+		return logging.getLogger(name)
 		
+	@staticmethod
+	def _createLevel_(verbose):
+		level = logging.WARNING
+		if verbose:
+			level = logging.DEBUG
+
+		return level
 		
 class PgInfo:
 	"""pg connection details"""
@@ -58,6 +59,7 @@ class PgInfo:
 	def __init__(self, logger, rawInfo):
 		self.logger = logger
 		self.rawInfo = rawInfo
+		self.logger.name = self.__class__.__name__
 
 	def parse(self):
 		data = self.rawInfo.replace('\n','').split(self.delimiter)
@@ -80,6 +82,7 @@ class PgPassParser:
 
 	def __init__(self, logger, arguments):
 		self.logger = logger
+		self.logger.name = self.__class__.__name__
 		self.filePath = arguments.getPath()
 
 	def parse(self):
@@ -108,6 +111,7 @@ class MenuBuilder:
 
 	def __init__(self, logger, items):
 		self.logger = logger
+		self.logger.name = self.__class__.__name__
 		self.items = items
 
 	def display(self):
@@ -129,6 +133,7 @@ class ItemExecutor:
 		
 	def __init__(self, logger, items, selection):
 		self.logger = logger
+		self.logger.name = self.__class__.__name__
 		self.selection = selection
 		self.items = items
 
@@ -145,7 +150,8 @@ def main():
 	arguments = ArgumentParser()
 	arguments.parse()
 
-	logger = LoggerFactory.createLogger(arguments)
+	scriptName = os.path.basename(__file__)
+	logger = LoggerFactory.createLogger(scriptName, arguments.isVerbose())
 
 	if arguments.isValid():
 		parser = PgPassParser(logger, arguments)
