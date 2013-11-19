@@ -97,7 +97,9 @@ class PgPassParser:
 
 	def isValidData(self,data):
 		if (data.replace('\n','') == ""):
-			return False
+			return False                
+		elif data.startswith('#'):
+                        return False
 		else:
 			return True
 
