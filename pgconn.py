@@ -74,7 +74,7 @@ class PgInfo:
 		return self.host+self.delimiter+self.port+self.delimiter+self.dbname+self.delimiter+self.username
 
 	def getExecuteCommand(self):
-		return "psql -h "+ self.host +" " + self.dbname + " -U " + self.username
+		return "psql -h "+ self.host +" " + self.dbname + " -U " + self.username + " -p " + self.port
 
 class PgPassParser:
 	""".pgpass parser"""
