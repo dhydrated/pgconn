@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pgconn',
-      version='0.2',
+      version='0.3',
       scripts=['bin/pgconn'],
       description='Utility to connect to your Postgres DB using your .pgpass file',
       url='http://github.com/dhydrated/pgconn',
