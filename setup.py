@@ -9,7 +9,7 @@ setup(name='pgconn',
       author_email='dhydrated@gmail.com',
       license='MIT',
       packages=['pgconn'],
-      install_requires=[
-          'os', 'optparse', 'logging'
-      ],
+      # install_requires=[
+      #     'os', 'optparse', 'logging'
+      # ],
       zip_safe=False)
